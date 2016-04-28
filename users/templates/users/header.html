@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="eng">
+
+<head>
+  <title>User</title>
+  <meta charset="utf-8">
+  {% load staticfiles %}
+  <!-- href gets from static directory -->
+<!--   <link rel='stylesheet' href="{% static 'bootstrap/css/bootstrap.min.css' %}"> -->
+</head>
+
+<body class="body" style="background-color:#f6f6f6">
+  <div class="container-fluid" style="min-height:95%; ">
+    <div class="row">
+        <div class="col-sm-2">
+          <br>
+          <center>
+          <img src="{% static 'personal/img/profile.jpg' %}" class="responsive-img" style='max-height:100px;' alt="face">
+          </center>
+        </div>
+        <div class="col-sm-10">
+          <br>
+          <center>
+          <h3>Dogs</h3>
+          </center>
+        </div>
+    </div><hr>
+
+    <div class="row">
+      <div class="col-sm-2">
+      <br>
+
+      <br>
+      <div class="well bs-sidebar" id="sidebar" style="background-color:#fff">
+        <ul class="nav nav-pills nav-stacked">
+        <li><a href='/'>Me!</a></li>
+        <li><a href='/dogs/'>Dogs!</a></li>
+        </ul>
+      </div> <!--well bs-sidebar affix-->
+      </div> <!--col-sm-2-->
+      <div class="col-sm-10">
+      
+      <div class='container-fluid'>
+      <br><br>
+<!--          {% block content %}
+         {% endblock %}  -->
+      </div>
+      </div>
+    </div> 
+  </div>
+  <footer>
+    <div class="container-fluid" style='margin-left:15px'>
+    </div>
+  </footer> 
+  
+</body>
+
+</html>
