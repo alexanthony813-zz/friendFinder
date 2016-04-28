@@ -101,3 +101,4 @@ def index(request):
         saveDog(dog)
 
     return render(request, 'users/home.html')
+
