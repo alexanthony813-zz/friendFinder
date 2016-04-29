@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
-
 from django.db import models
-
+# DO NOT IMPORT USERS MODEL, will cause infinite reference loop
 
 class Breed(models.Model):
     breed = models.TextField()
@@ -14,7 +13,8 @@ class Breed(models.Model):
 
 class Notes(models.Model):
     note = models.TextField()
-    dog = models.ForeignKey('Dog', on_delete=models.CASCADE, default='none')
+    # i used quotes for the Dog class here because we have not instantiated it yet
+    dog = models.ForeignKey('Dog', on_delete=models.CASCADE, default=None)
 
     @classmethod
     def create(cls, text, dog):
@@ -23,12 +23,13 @@ class Notes(models.Model):
 
 class Photos(models.Model):
     photo_url = models.TextField()
-    dog = models.ForeignKey('Dog', on_delete=models.CASCADE, default='none')
+    dog = models.ForeignKey('Dog', on_delete=models.CASCADE, default=None)
 
     @classmethod
     def create(cls, photo_url, dog):
         photo = cls(photo_url=photo_url, dog=dog)
         return photo
+
 
 class Dog(models.Model):
     # consider setting default values to null
@@ -43,7 +44,8 @@ class Dog(models.Model):
     zip_code = models.TextField()
     size = models.TextField()
     description = models.TextField()
-
+    adoptable = models.NullBooleanField(default=None)
+    fosterable = models.NullBooleanField(default=None)
 
     def __str__(self):
         return self.name
