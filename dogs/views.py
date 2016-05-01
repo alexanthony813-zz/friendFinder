@@ -28,9 +28,10 @@ def index(request):
         # creates new entry if dog doesn't exist
         saveDog(dog)
 
-    return render(request, 'dogs/main.html')
+    return render(request, 'dogs/header.html')
 
 def saveDog(dog):
+    print dog
     # prevents duplication
     if len(models.Dog.objects.filter(pet_id=getString(dog['id'])))>0:
         return
@@ -68,7 +69,7 @@ def saveDog(dog):
         notes = []
 
     try:
-        breeds = dog['options']['option']
+        breeds = dog['breeds']['breed']
     except:
         breeds = []
 
@@ -87,6 +88,8 @@ def saveDog(dog):
 
     # many to many
     for breed in breeds:
+        if breed == 'unavailable':
+            breed = 'Mixed'
         # check to see if breed exists first
         new_breed = models.Breed.create(getString(breed))
         new_breed.save()
