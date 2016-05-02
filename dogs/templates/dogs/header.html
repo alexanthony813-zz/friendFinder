@@ -12,42 +12,46 @@
 <body class="body" style="background-color:#f6f6f6">
   <div class="container-fluid" style="min-height:95%; ">
     <div class="row">
-        <div class="col-sm-2">
+<!--         <div class="col-sm-2">
           <br>
-          <center>
           <img src="{% static 'personal/img/profile.jpg' %}" class="responsive-img" style='max-height:100px;' alt="face">
-          </center>
-        </div>
-        <div class="col-sm-10">
+        </div> -->
+        <div>
           <br>
-          <center>
-          <h3>Dogs</h3>
-          </center>
+          <h3 class='text-center'>Find a Friend!</h3>
         </div>
     </div><hr>
 
     <div class="row">
       <div class="col-sm-2">
       <br>
-
       <br>
-      <div class="well bs-sidebar" id="sidebar" style="background-color:#fff">
-        <ul class="nav nav-pills nav-stacked">
-        </ul>
-      </div> <!--well bs-sidebar affix-->
       </div> <!--col-sm-2-->
       <div class="col-sm-10">
       
-      <div class='container-fluid'>
+      <div class="container-fluid">
       <br><br>
-         {% block content %}
-         {% endblock %} 
+         {% for dog in dogs %}
+           <div class="container">
+             <h4>{{dog.name}}</h4>
+             <p>{{dog.breed}}</p>
+             <p>{{dog.sex}}</p>
+             <p>{{dog.age}}</p>
+             <p>{{dog.size}}</p>
+             <p>{{dog.description}}</p>
+             <img src="{{dog.profile_photo_url}}"></img>
+             <p><a href="mailto:{{dog.contact_email}}">{{dog.contact_email}}</a></p>
+             {% if dog.contact_phone != "unavailable" and dog.contact_phone != "email" %}
+             <p><a href="{{dog.contact_phone}}">{{dog.contact_phone}}</a></p>
+             {% endif %}
+           </div>
+         {% endfor %}
       </div>
       </div>
     </div> 
   </div>
   <footer>
-    <div class="container-fluid" style='margin-left:15px'>
+    <div class="container-fluid" style="margin-left:15px">
     </div>
   </footer> 
   

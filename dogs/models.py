@@ -54,13 +54,14 @@ class Dog(models.Model):
     description = models.TextField()
     adoptable = models.NullBooleanField(default=None)
     fosterable = models.NullBooleanField(default=None)
+    profile_photo_url = models.CharField(default='', max_length=200)
 
     def __str__(self):
         return self.name
 
     @classmethod
-    def create(cls, pet_id, name, sex, age, contact_email, contact_phone, city, zip_code, size, description):
-        dog = cls(pet_id=pet_id, name=name, sex=sex, age=age, contact_email=contact_email, contact_phone=contact_phone, city=city, zip_code=zip_code,size=size, description=description)
+    def create(cls, pet_id, name, sex, age, contact_email, contact_phone, city, zip_code, size, description, profile_photo_url):
+        dog = cls(pet_id=pet_id, name=name, sex=sex, age=age, contact_email=contact_email, contact_phone=contact_phone, city=city, zip_code=zip_code,size=size, description=description, profile_photo_url=profile_photo_url)
         return dog
 
 
