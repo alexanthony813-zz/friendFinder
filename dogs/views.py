@@ -1,34 +1,36 @@
 from django.shortcuts import render
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
+from django.contrib.auth import authenticate, login, logout
+from friendFinder import settings
+from django.contrib.auth.decorators import login_required
 import urllib2
 import models
 import yaml
 
-# # gets all dogs
-# def index(request):
-#     dogs = models.Dog.filter()
-#     return render(request, 'includes/dogsnippet.html', {'dog_info': dogs})
-
-# def get_dog(request):
-#     dog_ids = request['dog_ids']
-#     dogs = models.Dog.filter(pk__in=dog_ids)
-#     return render(request, 'includes/dogsnippet.html', {'dog_info': dogs})
 def getString(obj):
     try:
         return obj['$t']
     except:
         return 'unavailable'
 
+def login(request):
+    # next = request.GET.get('next', '/home/')
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
 
-def index(request):
-    info = urllib2.urlopen('http://api.petfinder.com/pet.find?&format=json&key=e941c283e7da908741b97cf198cef9a8&location=33606&breed=dog&count=9').read()
-    dogs = yaml.safe_load(info)['petfinder']['pets']['pet']
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect('/')
+        else:
+            HttpResponseRedirect(settings.LOGIN_URL)
 
-    for dog in dogs:
-        # creates new entry if dog doesn't exist
-        saveDog(dog)
+    return render(request, 'dogs/login.html', {'redirect_to': '/'})
 
-    return render(request, 'dogs/header.html')
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect(settings.LOGIN_URL)
 
 def saveDog(dog):
     print dog
@@ -110,3 +112,13 @@ def saveDog(dog):
         new_photo.save()
 
     new_dog.save()
+
+def index(request):
+    info = urllib2.urlopen('http://api.petfinder.com/pet.find?&format=json&key=e941c283e7da908741b97cf198cef9a8&location=33606&breed=dog&count=9').read()
+    dogs = yaml.safe_load(info)['petfinder']['pets']['pet']
+
+    for dog in dogs:
+        # creates new entry if dog doesn't exist
+        saveDog(dog)
+
+    return render(request, 'dogs/header.html')

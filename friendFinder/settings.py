@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'rest_framework'
 ]
 
+LOGIN_URL='/login/'
+
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
