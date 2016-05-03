@@ -44,6 +44,10 @@ $(document).ready(function(){
           appendDog(dog)
         }
       });
+
+      if(dogs.length === 0){
+        showAlert();
+      }
   });
 
   });
@@ -55,6 +59,9 @@ $(document).ready(function(){
 
 
 function appendDog(dog){
-  console.log($('.module-card-wrap').length)
   $('.module-card-wrap').append("<div class='module-card'><div class='module-card-title'>"+dog.name+"</div><div class='module-card-meta'><div class='module-card-category'><span class='fa fa-tag'></span><span>" + dog.size+ " " + dog.sex + "</span></div><div class='module-card-author'><span class='fa fa-user'></span><span>" + dog.age + "</span></div></div> <!-- /module-card-meta --><div class='module-card-bottom'><img src='" + dog.profile_photo_url +"' class='module-card-img' /><button class='module-card-button'>See More</button></div></div>")
+}
+
+function showAlert(){
+  $('#prompt').text("Try another zip code!")
 }
