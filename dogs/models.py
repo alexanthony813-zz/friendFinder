@@ -41,20 +41,20 @@ class Photos(models.Model):
 
 class Dog(models.Model):
     # consider setting default values to null
-    pet_id = models.TextField()
-    name = models.TextField()
+    pet_id = models.TextField(null=True, default='unavailable')
+    name = models.TextField(null=True, default='unavailable')
     breeds = models.ManyToManyField(Breed)
-    sex = models.TextField()
-    age = models.TextField()
-    contact_email = models.TextField()
-    contact_phone = models.TextField()
-    city = models.TextField()
-    zip_code = models.TextField()
-    size = models.TextField()
-    description = models.TextField()
-    adoptable = models.NullBooleanField(default=None)
-    fosterable = models.NullBooleanField(default=None)
-    profile_photo_url = models.CharField(default='', max_length=200)
+    sex = models.TextField(null=True, default='unavailable')
+    age = models.TextField(null=True, default='unavailable')
+    contact_email = models.TextField(null=True, default='unavailable')
+    contact_phone = models.TextField(null=True, default='unavailable')
+    city = models.TextField(null=True, default='unavailable')
+    zip_code = models.TextField(null=True, default='unavailable')
+    size = models.TextField(null=True, default='unavailable')
+    description = models.TextField(null=True, default='unavailable')
+    adoptable = models.NullBooleanField(null=True, default=None)
+    fosterable = models.NullBooleanField(null=True, default=None)
+    profile_photo_url = models.CharField(null=True, default='', max_length=200)
 
     def __str__(self):
         return self.name

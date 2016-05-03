@@ -5,16 +5,16 @@ from friendFinder import settings
 from django.contrib.auth.decorators import login_required
 import urllib2
 import models
-import yaml
+# import yaml
 import re
 import json
 from django.http import JsonResponse
+import petfinder
+import config
 
-def getString(obj):
-    try:
-        return obj['$t']
-    except:
-        return 'unavailable'
+
+# Instantiate the client with your credentials.
+api = petfinder.PetFinderClient(api_key=config.API_KEY, api_secret=config.API_SECRET)
 
 def login(request):
     # next = request.GET.get('next', '/home/')
@@ -37,28 +37,27 @@ def user_logout(request):
 
 def saveDog(dog, zip_to_search):
     # prevents duplication
-    if len(models.Dog.objects.filter(pet_id=getString(dog['id'])))>0:
+    if len(models.Dog.objects.filter(pet_id=dog['id']))>0:
         return
 
     # ends save if no pictures
-    try:
-        photos = dog['media']['photos']['photo']
-        profile_photo_url = getString(photos[0])
-    except:
-        return
+    if len(dog['photos']) == 0:
+        return 
 
-    pet_id = getString(dog['id'])
-    name = getString(dog['name'])
-    age = getString(dog['age'])
-    description = getString(dog['description'])
+    photos = dog['photos']
+    profile_photo_url = photos[0]['url']
+    pet_id = dog['shelterPetId']
+    name = dog['name']
+    age = dog['age']
+    description = dog['description']
 
-    sex = getString(dog['sex'])
+    sex = dog['sex']
     if sex == 'M':
         sex = 'Male'
     else:
         sex = 'Female'
 
-    size = getString(dog['size'])
+    size = dog['size']
     if size == 'S':
         size = 'Small'
     elif size =='L':
@@ -66,37 +65,15 @@ def saveDog(dog, zip_to_search):
     else:
         size = 'Medium'
 
-    try:
-        contact_email = getString(dog['contact']['email'])
-    except:
-        contact_email = 'unavailable'
-
-    try:
-        contact_phone = getString(dog['contact']['phone'])
-    except:
-        contact_phone = 'unavailable'
-
-    try:
-        city = getString(dog['contact']['city'])
-    except:
-        city = 'unavailable'
-
-    try:
-        zip_code = getString(dog['contact']['zip_code'])
-    except:
-        zip_code = zip_to_search
-
-    try:
-        notes = dog['options']['option']
-    except:
-        notes = []
-
-    try:
-        breeds = dog['breeds']['breed']
-    except:
-        breeds = []
+    contact_email = dog['contact']['email']
+    contact_phone = dog['contact']['phone']
+    city = dog['contact']['city']
+    zip_code = dog['contact']['zip']
+    notes = dog['options']
+    breeds = dog['breeds']
 
 
+    print 'here?'
     new_dog = models.Dog.create(pet_id, name, sex, age, contact_email, contact_phone, city, zip_code, size, description, profile_photo_url)
     new_dog.save()
 
@@ -110,10 +87,10 @@ def saveDog(dog, zip_to_search):
         if breed == 'unavailable':
             breed = 'Mixed'
         # check to see if breed exists first
-        new_breed = models.Breed.create(getString(breed))
+        new_breed = models.Breed.create(breed)
         new_breed.save()
         # get new breed primary id
-        new_breed = models.Breed.objects.filter(breed=getString(breed))[0]
+        new_breed = models.Breed.objects.filter(breed=breed)[0]
         new_breed_id = new_breed.pk
 
         new_dog.breeds.add(new_breed_id)
@@ -121,11 +98,11 @@ def saveDog(dog, zip_to_search):
 
     # these two are one to many. can be queried later from join with foreign key from respective tables
     for note in notes:
-        new_note = models.Notes.create(getString(note), new_dog)
+        new_note = models.Notes.create(note, new_dog)
         new_note.save()
 
     for photo in photos:
-        new_photo = models.Photos.create(getString(photo), new_dog)
+        new_photo = models.Photos.create(photo['url'], new_dog)
         new_photo.save()
 
     new_dog.save()
@@ -136,21 +113,22 @@ def index(request):
     return render(request, 'dogs/header.html', {'dogs': all_dogs})
 
 def search_dogs(request):
+    last_offset = 0
+    count = 20
     zip_to_search = request.GET.get('zip_code')
+    dogs = []
 
-    try:
-        int(zip_to_search)
-        if len(zip_to_search) == 5:
-            url = 'http://api.petfinder.com/pet.find?&format=json&key=e941c283e7da908741b97cf198cef9a8&location=%s&breed=dog&count=10' % zip_to_search
-            info = urllib2.urlopen(url).read()
-            try:
-                dogs = yaml.safe_load(info)['petfinder']['pets']['pet']
-                for dog in dogs:
-                    saveDog(dog, zip_to_search)
-            except:
-                pass
-    except:
-        pass
+    # using enumerate because the "count" parameter does not appear to work consistently
+    for i, dog in enumerate(api.pet_find(output='full',count=20, location=zip_to_search, animal='dog', offset=last_offset, lastOffset=last_offset)):
+        last_offset+=count
+        dogs.append(dog)
+        if i == 1:
+            print dog
+        if i == 20:
+            break
+
+    for dog in dogs:
+        saveDog(dog, zip_to_search)
 
     specific_dogs = models.Dog.objects.filter(zip_code=zip_to_search)
     json_dogs = []

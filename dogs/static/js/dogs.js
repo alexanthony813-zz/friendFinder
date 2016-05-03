@@ -15,7 +15,6 @@ $(document).ready(function(){
       }
 
       dogs = data.dogs;
-
       //reduce to object with name-zip key value
       var nameToZip = dogs.reduce(function(prev, curr){
         prev[curr.name] = curr.zip_code;
@@ -35,18 +34,18 @@ $(document).ready(function(){
       });
 
       // adds response dogs that are not on page
-      console.log(dogs)
       dogs.forEach(function(dog){
         var name = dog.name;
-        console.log(dog.name)
         if(!(name in self.oldNames)){
           self.nameToZip[name] = dog.zip_code;
-          appendDog(dog)
+          appendDog(dog);
         }
       });
 
       if(dogs.length === 0){
-        showAlert();
+        $('#prompt').text("Try another zip code!")
+      } else {
+        $('#prompt').text("Search By Zipcode:");
       }
   });
 
@@ -62,6 +61,3 @@ function appendDog(dog){
   $('.module-card-wrap').append("<div class='module-card'><div class='module-card-title'>"+dog.name+"</div><div class='module-card-meta'><div class='module-card-category'><span class='fa fa-tag'></span><span>" + dog.size+ " " + dog.sex + "</span></div><div class='module-card-author'><span class='fa fa-user'></span><span>" + dog.age + "</span></div></div> <!-- /module-card-meta --><div class='module-card-bottom'><img src='" + dog.profile_photo_url +"' class='module-card-img' /><button class='module-card-button'>See More</button></div></div>")
 }
 
-function showAlert(){
-  $('#prompt').text("Try another zip code!")
-}
