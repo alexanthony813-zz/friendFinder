@@ -6,57 +6,55 @@
   <meta charset="utf-8">
   {% load static from staticfiles %}
   <!-- href gets from static directory -->
-  <link rel='stylesheet' href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}"/>
+  <link rel="stylesheet" href="{%  static 'css/main.css' %}">
 </head>
 
 <body class="body" style="background-color:#f6f6f6">
   <div class="container-fluid" style="min-height:95%; ">
     <div class="row">
-<!--         <div class="col-sm-2">
-          <br>
-          <img src="{% static 'personal/img/profile.jpg' %}" class="responsive-img" style='max-height:100px;' alt="face">
-        </div> -->
         <div>
           <br>
           <h3 class='text-center'>Find a Friend!</h3>
         </div>
     </div><hr>
-
-    <div class="row">
-      <div class="col-sm-2">
-      <br>
-      {% for dog in dogs %}
-          <img src="{{dog.profile_photo_url}}"></img>
-      {% endfor %}
-      <br>
-      </div> <!--col-sm-2-->
-      <div class="col-sm-10">
-      
-      <div class="container-fluid">
-      <br><br>
+    <div class="container-fluid">
+      <form>
+        <h5>Search By Zipcode:</h5>
+        <input type="text" input="zip-code" id="zip-code"/>
+        <input type="submit" value="Search" id="search">
+      </form>
+      <!-- add form for filters -->
+    </div>
          {% for dog in dogs %}
-           <div class="container">
-             <h4>{{dog.name}}</h4>
-             <p>{{dog.breed}}</p>
-             <p>{{dog.sex}}</p>
-             <p>{{dog.age}}</p>
-             <p>{{dog.size}}</p>
-             <p>{{dog.description}}</p>
-             <p><a href="mailto:{{dog.contact_email}}">{{dog.contact_email}}</a></p>
-             {% if dog.contact_phone != "unavailable" and dog.contact_phone != "email" %}
-             <p><a href="{{dog.contact_phone}}">{{dog.contact_phone}}</a></p>
-             {% endif %}
-           </div>
+          <div class="module-card-wrap">
+            <div class="module-card">
+              <div class="module-card-title">{{dog.name}}</div>
+              <div class="module-card-meta">
+                <div class="module-card-category">
+                  <span class="fa fa-tag"></span>
+                  <span>{{dog.size}}, {{dog.sex}}</span>
+                </div>
+                <div class="module-card-author">
+                  <span class="fa fa-user"></span>
+                  <span>{{dog.age}}</span>
+                </div>      
+              </div> <!-- /module-card-meta -->
+
+              <div class="module-card-bottom">
+                <img src="{{dog.profile_photo_url}}" class="module-card-img" />
+                <button class="module-card-button">See More</button>
+              </div>
+            </div>
+          </div>
          {% endfor %}
-      </div>
-      </div>
-    </div> 
   </div>
   <footer>
     <div class="container-fluid" style="margin-left:15px">
     </div>
   </footer> 
-  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script src="{% static 'js/dogs.js'%}"></script>
 </body>
 
 </html>
