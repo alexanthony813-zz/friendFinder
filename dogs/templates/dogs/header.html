@@ -29,11 +29,11 @@
         <script type="text/javascript">
           var dogs = []
         </script>
+        <div class="module-card-wrap">
         {% for dog in dogs %}
         <script type="text/javascript">
           dogs.push("{{dog|safe}}")
         </script>
-        <div class="module-card-wrap wrapper">
           <div class="module-card">
             <div class="module-card-title">{{dog.name}}</div>
             <div class="module-card-meta">
