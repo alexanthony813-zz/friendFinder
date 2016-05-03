@@ -59,6 +59,21 @@ class Dog(models.Model):
     def __str__(self):
         return self.name
 
+    def serialize(self):
+        return {
+            'pet_id': self.pet_id,
+            'name': self.name,
+            'sex': self.sex,
+            'age': self.age,
+            'contact_email': self.contact_email,
+            'contact_phone': self.contact_phone,
+            'city': self.city,
+            'zip_code': self.zip_code,
+            'size': self.size,
+            'description': self.description,
+            'profile_photo_url': self.profile_photo_url
+        }
+
     @classmethod
     def create(cls, pet_id, name, sex, age, contact_email, contact_phone, city, zip_code, size, description, profile_photo_url):
         dog = cls(pet_id=pet_id, name=name, sex=sex, age=age, contact_email=contact_email, contact_phone=contact_phone, city=city, zip_code=zip_code,size=size, description=description, profile_photo_url=profile_photo_url)

@@ -7,6 +7,8 @@ import urllib2
 import models
 import yaml
 import re
+import json
+from django.http import JsonResponse
 
 def getString(obj):
     try:
@@ -129,8 +131,11 @@ def saveDog(dog, zip_to_search):
     new_dog.save()
 
 
-
 def index(request):
+    all_dogs = models.Dog.objects.all()
+    return render(request, 'dogs/header.html', {'dogs': all_dogs})
+
+def search_dogs(request):
     zip_to_search = request.GET.get('zip_code')
 
     try:
@@ -144,8 +149,13 @@ def index(request):
                     saveDog(dog, zip_to_search)
             except:
                 pass
-            all_dogs = models.Dog.objects.filter(zip_code=zip_to_search)
     except:
-        all_dogs = models.Dog.objects.all()
+        pass
 
-    return render(request, 'dogs/header.html', {'dogs': all_dogs})
+    specific_dogs = models.Dog.objects.filter(zip_code=zip_to_search)
+    json_dogs = []
+
+    for dog in specific_dogs:
+        json_dogs.append(dog.serialize())
+
+    return JsonResponse({'dogs': json.dumps(json_dogs)})

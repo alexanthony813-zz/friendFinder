@@ -22,32 +22,38 @@
       <form>
         <h5>Search By Zipcode:</h5>
         <input type="text" input="zip-code" id="zip-code"/>
-        <input type="submit" value="Search" id="search">
+        <input type="button" value="Search" id="search">
       </form>
       <!-- add form for filters -->
     </div>
-         {% for dog in dogs %}
-          <div class="module-card-wrap">
-            <div class="module-card">
-              <div class="module-card-title">{{dog.name}}</div>
-              <div class="module-card-meta">
-                <div class="module-card-category">
-                  <span class="fa fa-tag"></span>
-                  <span>{{dog.size}}, {{dog.sex}}</span>
-                </div>
-                <div class="module-card-author">
-                  <span class="fa fa-user"></span>
-                  <span>{{dog.age}}</span>
-                </div>      
-              </div> <!-- /module-card-meta -->
-
-              <div class="module-card-bottom">
-                <img src="{{dog.profile_photo_url}}" class="module-card-img" />
-                <button class="module-card-button">See More</button>
+        <script type="text/javascript">
+          var dogs = []
+        </script>
+        {% for dog in dogs %}
+        <script type="text/javascript">
+          dogs.push("{{dog|safe}}")
+        </script>
+        <div class="module-card-wrap wrapper">
+          <div class="module-card">
+            <div class="module-card-title">{{dog.name}}</div>
+            <div class="module-card-meta">
+              <div class="module-card-category">
+                <span class="fa fa-tag"></span>
+                <span>{{dog.size}}, {{dog.sex}}</span>
               </div>
+              <div class="module-card-author">
+                <span class="fa fa-user"></span>
+                <span>{{dog.age}}</span>
+              </div>      
+            </div> <!-- /module-card-meta -->
+
+            <div class="module-card-bottom">
+              <img src="{{dog.profile_photo_url}}" class="module-card-img" />
+              <button class="module-card-button">See More</button>
             </div>
           </div>
-         {% endfor %}
+        </div>
+       {% endfor %}
   </div>
   <footer>
     <div class="container-fluid" style="margin-left:15px">
