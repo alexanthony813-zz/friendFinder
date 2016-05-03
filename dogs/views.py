@@ -73,7 +73,6 @@ def saveDog(dog, zip_to_search):
     breeds = dog['breeds']
 
 
-    print 'here?'
     new_dog = models.Dog.create(pet_id, name, sex, age, contact_email, contact_phone, city, zip_code, size, description, profile_photo_url)
     new_dog.save()
 
@@ -119,18 +118,20 @@ def search_dogs(request):
     dogs = []
 
     # using enumerate because the "count" parameter does not appear to work consistently
-    for i, dog in enumerate(api.pet_find(output='full',count=20, location=zip_to_search, animal='dog', offset=last_offset, lastOffset=last_offset)):
+    for i, dog in enumerate(api.pet_find(output='full',count=count, location=zip_to_search, animal='dog', offset=last_offset, lastOffset=last_offset)):
         last_offset+=count
         dogs.append(dog)
-        if i == 1:
-            print dog
-        if i == 20:
+        if i == 40:
             break
 
     for dog in dogs:
         saveDog(dog, zip_to_search)
 
+    # print str(zip_to_search)
     specific_dogs = models.Dog.objects.filter(zip_code=zip_to_search)
+    print 'dogs!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'
+    print specific_dogs
+    # all_dogs = models.Dog.objects.all()
     json_dogs = []
 
     for dog in specific_dogs:
