@@ -158,4 +158,4 @@ def search_dogs(request):
     for dog in specific_dogs:
         json_dogs.append(dog.serialize())
 
-    return JsonResponse({'dogs': json.dumps(json_dogs)})
+    return JsonResponse({'dogs': json_dogs})
